@@ -13,7 +13,7 @@ function SplashPage() {
     const redirect = setTimeout(() => {
       clearInterval(dotInterval);
       navigate("/home");
-    }, 3000);
+    }, 5000);
     return () => {
       clearInterval(dotInterval);
       clearTimeout(redirect);
