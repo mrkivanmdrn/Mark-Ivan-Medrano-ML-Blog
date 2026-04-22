@@ -11,3 +11,5 @@ Thumbs.db
 
 # Misc
 *.tmp
+'.env' 
+'.env.production' 

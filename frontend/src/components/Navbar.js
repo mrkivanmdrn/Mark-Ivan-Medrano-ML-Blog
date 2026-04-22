@@ -156,7 +156,7 @@ function Navbar() {
                 >
                   {user.profilePic ? (
                     <img
-                      src={`http://localhost:5000/uploads/${user.profilePic}`}
+                      src={`${process.env.REACT_APP_BACKEND_URL}/uploads/${user.profilePic}`}
                       alt=""
                       style={{
                         width: 22,
