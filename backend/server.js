@@ -15,14 +15,12 @@ const app = express();
 
 connectDB();
 
-// Allow configured origins to call this server
-const allowedOrigins = (process.env.ALLOWED_ORIGIN || 'http://localhost:3000').split(',');
 app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
-    callback(new Error(`CORS: origin ${origin} not allowed`));
-  },
-  credentials: true
+  origin: [
+    'http://localhost:3000',
+    'https://thefolio.vercel.app',
+  ],
+  credentials: true,
 }));
 app.use(express.json());
 
@@ -40,4 +38,6 @@ app.use('/api/admin',    adminRoutes);
 app.get('/', (req, res) => res.json({ message: 'ML Portfolio Blog API is running ✔' }));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
