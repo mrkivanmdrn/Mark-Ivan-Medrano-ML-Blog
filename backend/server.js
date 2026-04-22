@@ -19,6 +19,7 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'https://thefolio.vercel.app',
+    'https://thefolio-api.onrender.com',
   ],
   credentials: true,
 }));
