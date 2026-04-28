@@ -9,28 +9,12 @@ function validate(form) {
   if (!form.name.trim()) errors.name = "Full name is required.";
   else if (form.name.trim().length < 3)
     errors.name = "Name must be at least 3 characters.";
-  if (!form.username.trim()) errors.username = "Username is required.";
-  else if (form.username.trim().length < 3)
-    errors.username = "Username must be at least 3 characters.";
-  else if (!/^[a-zA-Z0-9_]+$/.test(form.username))
-    errors.username = "Only letters, numbers, and underscores.";
   if (!form.email.trim()) errors.email = "Email is required.";
   else if (!/^\S+@\S+\.\S+$/.test(form.email))
     errors.email = "Enter a valid email address.";
-  if (!form.dob) errors.dob = "Date of birth is required.";
-  else {
-    const today = new Date();
-    const birth = new Date(form.dob);
-    let age = today.getFullYear() - birth.getFullYear();
-    const m = today.getMonth() - birth.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
-    if (birth > today) errors.dob = "Date cannot be in the future.";
-    else if (age < 13) errors.dob = "You must be at least 13 years old.";
-  }
-  if (!form.level) errors.level = "Please select your interest level.";
   if (!form.password) errors.password = "Password is required.";
-  else if (form.password.length < 6)
-    errors.password = "Password must be at least 6 characters.";
+  else if (form.password.length < 8)
+    errors.password = "Password must be at least 8 characters.";
   if (form.password !== form.confirm)
     errors.confirm = "Passwords do not match.";
   if (!form.terms) errors.terms = "You must agree to the terms.";
@@ -40,10 +24,7 @@ function validate(form) {
 function RegisterPage() {
   const [form, setForm] = useState({
     name: "",
-    username: "",
     email: "",
-    dob: "",
-    level: "",
     password: "",
     confirm: "",
     terms: false,
@@ -115,21 +96,6 @@ function RegisterPage() {
               />
               <span className="error-msg">{errors.name || ""}</span>
             </div>
-            {/* Username */}
-            <div className="form-field">
-              <label htmlFor="username">Username</label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                className="form-input"
-                placeholder="e.g. mark_ivan"
-                value={form.username}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <span className="error-msg">{errors.username || ""}</span>
-            </div>
             {/* Email */}
             <div className="form-field">
               <label htmlFor="email">Email Address</label>
@@ -144,47 +110,6 @@ function RegisterPage() {
                 onBlur={handleBlur}
               />
               <span className="error-msg">{errors.email || ""}</span>
-            </div>
-            {/* DOB */}
-            <div className="form-field">
-              <label htmlFor="dob">Date of Birth</label>
-              <input
-                id="dob"
-                name="dob"
-                type="date"
-                className="form-input"
-                value={form.dob}
-                onChange={handleChange}
-                onBlur={handleBlur}
-              />
-              <span className="error-msg">{errors.dob || ""}</span>
-            </div>
-            {/* Interest level */}
-            <div className="form-field">
-              <label>Interest Level</label>
-              <div className="radio-group">
-                {["beginner", "intermediate", "expert"].map((lvl) => (
-                  <label
-                    key={lvl}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 6,
-                      fontWeight: 400,
-                    }}
-                  >
-                    <input
-                      type="radio"
-                      name="level"
-                      value={lvl}
-                      checked={form.level === lvl}
-                      onChange={handleChange}
-                    />
-                    {lvl.charAt(0).toUpperCase() + lvl.slice(1)}
-                  </label>
-                ))}
-              </div>
-              <span className="error-msg">{errors.level || ""}</span>
             </div>
             {/* Password */}
             <div className="form-field">

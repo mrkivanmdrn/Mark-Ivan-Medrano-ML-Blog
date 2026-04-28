@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import API from "../api/axios";
 
-const API_URL = "http://localhost:5000";
-
 function AdminPage() {
   const [tab, setTab] = useState("users");
   const [users, setUsers] = useState([]);
@@ -161,14 +159,15 @@ function AdminPage() {
                       >
                         {u.profilePic ? (
                           <img
-                            src={`${API_URL}/uploads/${u.profilePic}`}
-                            alt=""
+                            src={`${process.env.REACT_APP_BACKEND_URL}/uploads/${u.profilePic}`}
+                            alt={u.name ? `Profile picture of ${u.name}` : 'User avatar'}
                             style={{
                               width: 28,
                               height: 28,
                               borderRadius: "50%",
                               objectFit: "cover",
                             }}
+                            onError={(e) => { e.target.style.display = 'none'; }}
                           />
                         ) : (
                           <div

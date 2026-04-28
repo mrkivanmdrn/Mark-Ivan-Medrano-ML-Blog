@@ -14,4 +14,8 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Indexes for common queries
+postSchema.index({ status: 1, createdAt: -1 });
+postSchema.index({ author: 1 });
+
 module.exports = mongoose.model('Post', postSchema);

@@ -1,38 +1,45 @@
 // src/data/galleryImages.js
+import ml1 from "../images/ml-1.jpg";
+import ml2 from "../images/ml-2.jpg";
+import ml3 from "../images/ml-3.jpg";
+import ml4 from "../images/ml-4.jpg";
+import ml5 from "../images/ml-5.jpg";
+import ml6 from "../images/ml-6.jpg";
+
 export const galleryImages = [
   {
     id: 1,
-    src: "/images/ml-1.jpg",
+    src: ml1,
     caption: "Team lineup — ready for ranked",
     alt: "ML heroes team",
   },
   {
     id: 2,
-    src: "/images/ml-2.jpg",
+    src: ml2,
     caption: "Hero roster — picking your main",
     alt: "ML hero roster",
   },
   {
     id: 3,
-    src: "/images/ml-3.jpg",
+    src: ml3,
     caption: "Loading in — every game is a new story",
     alt: "ML loading screen",
   },
   {
     id: 4,
-    src: "/images/ml-4.jpg",
+    src: ml4,
     caption: "Jungle hero — map control is key",
     alt: "ML jungle hero",
   },
   {
     id: 5,
-    src: "/images/ml-5.jpg",
+    src: ml5,
     caption: "Late game fight — the final push",
     alt: "ML team fight",
   },
   {
     id: 6,
-    src: "/images/ml-6.jpg",
+    src: ml6,
     caption: "Friend Fest — community is everything",
     alt: "ML friend fest",
   },
@@ -62,17 +69,17 @@ export const gameHighlights = [
 export const tacticDiagrams = [
   {
     id: 1,
-    src: "/images/ml-2.jpg",
+    src: ml2,
     caption: "Hero roles — knowing your position on the map",
   },
   {
     id: 2,
-    src: "/images/ml-4.jpg",
+    src: ml4,
     caption: "Jungle pathing — efficient buff and crab control",
   },
   {
     id: 3,
-    src: "/images/ml-5.jpg",
+    src: ml5,
     caption: "Team fight positioning — peel for your marksman",
   },
 ];

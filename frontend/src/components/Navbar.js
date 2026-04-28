@@ -154,20 +154,21 @@ function Navbar() {
                   style={linkStyle}
                   className={active("/profile")}
                 >
-                  {user.profilePic ? (
-                    <img
-                      src={`${process.env.REACT_APP_BACKEND_URL}/uploads/${user.profilePic}`}
-                      alt=""
-                      style={{
-                        width: 22,
-                        height: 22,
-                        borderRadius: "50%",
-                        objectFit: "cover",
-                        verticalAlign: "middle",
-                        marginRight: 5,
-                      }}
-                    />
-                  ) : null}
+                   {user.profilePic ? (
+                     <img
+                       src={`${process.env.REACT_APP_BACKEND_URL}/uploads/${user.profilePic}`}
+                       alt={user.name ? `Profile picture of ${user.name}` : 'User avatar'}
+                       style={{
+                         width: 22,
+                         height: 22,
+                         borderRadius: "50%",
+                         objectFit: "cover",
+                         verticalAlign: "middle",
+                         marginRight: 5,
+                       }}
+                       onError={(e) => { e.target.style.display = 'none'; }}
+                     />
+                   ) : null}
                   {user.name}
                 </Link>
               </li>

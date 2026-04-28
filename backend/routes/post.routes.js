@@ -4,8 +4,18 @@ const Post              = require('../models/Post');
 const { protect }       = require('../middleware/auth.middleware');
 const { memberOrAdmin } = require('../middleware/role.middleware');
 const upload            = require('../middleware/upload');
+const fs                = require('fs');
+const path              = require('path');
 
 const router = express.Router();
+
+const deleteFileIfExists = (filename) => {
+  if (!filename) return;
+  const filePath = path.join(__dirname, '..', 'uploads', filename);
+  fs.unlink(filePath, (err) => {
+    if (err) console.error('Failed to delete file:', filePath, err.message);
+  });
+};
 
 // GET /api/posts — public, all published posts newest first
 router.get('/', async (req, res) => {
@@ -46,11 +56,24 @@ router.put('/:id', protect, memberOrAdmin, upload.single('image'), async (req, r
     const isOwner = post.author.toString() === req.user._id.toString();
     const isAdmin = req.user.role === 'admin';
     if (!isOwner && !isAdmin) return res.status(403).json({ message: 'Not authorized' });
+
+    const oldImage = post.image;
+
+    if (req.file) {
+      post.image = req.file.filename;
+    }
     if (req.body.title) post.title = req.body.title;
     if (req.body.body)  post.body  = req.body.body;
     if (req.body.tag)   post.tag   = req.body.tag;
-    if (req.file)       post.image = req.file.filename;
+
     await post.save();
+
+    // Delete old image after successful update
+    if (req.file && oldImage) {
+      deleteFileIfExists(oldImage);
+    }
+
+    await post.populate('author', 'name profilePic');
     res.json(post);
   } catch (err) { res.status(500).json({ message: err.message }); }
 });
@@ -63,6 +86,10 @@ router.delete('/:id', protect, memberOrAdmin, async (req, res) => {
     const isOwner = post.author.toString() === req.user._id.toString();
     const isAdmin = req.user.role === 'admin';
     if (!isOwner && !isAdmin) return res.status(403).json({ message: 'Not authorized' });
+
+    // Delete associated image file if exists
+    if (post.image) deleteFileIfExists(post.image);
+
     await post.deleteOne();
     res.json({ message: 'Post deleted' });
   } catch (err) { res.status(500).json({ message: err.message }); }

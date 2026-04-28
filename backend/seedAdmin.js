@@ -18,9 +18,7 @@ const seed = async () => {
     role: 'admin',
   });
 
-  console.log('✅ Admin created!');
-  console.log('   Email:    admin@gmail.com');
-  console.log('   Password: admin123');
+  console.log('✅ Admin created successfully');
   console.log('⚠️  Delete seedAdmin.js now — you only need it once.');
   process.exit();
 };

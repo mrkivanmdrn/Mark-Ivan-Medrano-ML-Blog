@@ -10,4 +10,8 @@ const commentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Index for querying comments by post
+commentSchema.index({ post: 1 });
+commentSchema.index({ author: 1 });
+
 module.exports = mongoose.model('Comment', commentSchema);

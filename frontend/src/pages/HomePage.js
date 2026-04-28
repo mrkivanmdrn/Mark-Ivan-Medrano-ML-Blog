@@ -5,10 +5,8 @@ import API from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import heroImg from '../images/ml-1.jpg';
 
-const API_URL = 'http://localhost:5000';
-
 function HomePage() {
-  const [posts,   setPosts]   = useState([]);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
 
@@ -82,13 +80,14 @@ function HomePage() {
         <div className="posts-grid">
           {posts.map(post => (
             <div key={post._id} className="post-card">
-              {post.image && (
-                <img
-                  src={`${API_URL}/uploads/${post.image}`}
-                  alt={post.title}
-                  className="post-card-img"
-                />
-              )}
+               {post.image && (
+                 <img
+                   src={`${process.env.REACT_APP_BACKEND_URL}/uploads/${post.image}`}
+                   alt={post.title}
+                   className="post-card-img"
+                   onError={(e) => { e.target.style.display = 'none'; }}
+                 />
+               )}
               <div className="post-card-body">
                 {post.tag && <span className="post-tag">{post.tag}</span>}
                 <h3>
@@ -101,10 +100,10 @@ function HomePage() {
                 </p>
                 <div className="post-card-meta">
                   <span className="post-author">
-                    {post.author?.profilePic && (
-                      <img src={`${API_URL}/uploads/${post.author.profilePic}`} alt=""
-                        className="author-avatar" />
-                    )}
+                   {post.author?.profilePic && (
+                     <img src={`${process.env.REACT_APP_BACKEND_URL}/uploads/${post.author.profilePic}`} alt={post.author?.name ? `Profile picture of ${post.author.name}` : 'Author avatar'}
+                       className="author-avatar" onError={(e) => { e.target.style.display = 'none'; }} />
+                   )}
                     {post.author?.name}
                   </span>
                   <span>{new Date(post.createdAt).toLocaleDateString()}</span>

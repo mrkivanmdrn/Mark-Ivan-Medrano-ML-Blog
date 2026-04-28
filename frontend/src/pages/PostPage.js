@@ -4,8 +4,6 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import API from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 
-const API_URL = "http://localhost:5000";
-
 function PostPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -83,9 +81,10 @@ function PostPage() {
         {/* Post header */}
         {post.image && (
           <img
-            src={`${API_URL}/uploads/${post.image}`}
+            src={`${process.env.REACT_APP_BACKEND_URL}/uploads/${post.image}`}
             alt={post.title}
             className="post-detail-img"
+            onError={(e) => { e.target.style.display = 'none'; }}
           />
         )}
 
@@ -95,9 +94,10 @@ function PostPage() {
         <div className="post-detail-meta">
           {post.author?.profilePic && (
             <img
-              src={`${API_URL}/uploads/${post.author.profilePic}`}
-              alt=""
+              src={`${process.env.REACT_APP_BACKEND_URL}/uploads/${post.author.profilePic}`}
+              alt={post.author?.name ? `Profile picture of ${post.author.name}` : 'Author avatar'}
               className="author-avatar-lg"
+              onError={(e) => { e.target.style.display = 'none'; }}
             />
           )}
           <span>
@@ -184,9 +184,10 @@ function PostPage() {
                   <div className="comment-header">
                     {c.author?.profilePic && (
                       <img
-                        src={`${API_URL}/uploads/${c.author.profilePic}`}
-                        alt=""
+                        src={`${process.env.REACT_APP_BACKEND_URL}/uploads/${c.author.profilePic}`}
+                        alt={c.author?.name ? `Profile picture of ${c.author.name}` : 'Comment author'}
                         className="author-avatar"
+                        onError={(e) => { e.target.style.display = 'none'; }}
                       />
                     )}
                     <strong>{c.author?.name}</strong>

@@ -11,10 +11,17 @@ const genToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
   const { name, email, password } = req.body;
+
+  // Validate input
+  if (!name || !name.trim()) return res.status(400).json({ message: 'Name is required' });
+  if (name.trim().length < 2) return res.status(400).json({ message: 'Name must be at least 2 characters' });
+  if (!email || !/^\S+@\S+\.\S+$/.test(email)) return res.status(400).json({ message: 'Invalid email address' });
+  if (!password || password.length < 8) return res.status(400).json({ message: 'Password must be at least 8 characters' });
+
   try {
     if (await User.findOne({ email }))
       return res.status(400).json({ message: 'Email is already registered' });
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name: name.trim(), email, password });
     res.status(201).json({
       token: genToken(user._id),
       user: { _id: user._id, name: user.name, email: user.email, role: user.role },
@@ -48,10 +55,20 @@ router.get('/me', protect, async (req, res) => {
 router.put('/profile', protect, upload.single('profilePic'), async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
+    const oldPic = user.profilePic;
     if (req.body.name) user.name = req.body.name;
     if (req.body.bio !== undefined) user.bio = req.body.bio;
     if (req.file) user.profilePic = req.file.filename;
     await user.save();
+    // Delete old profile picture after successful update
+    if (req.file && oldPic) {
+      const fs = require('fs');
+      const path = require('path');
+      const oldPath = path.join(__dirname, '..', 'uploads', oldPic);
+      fs.unlink(oldPath, (err) => {
+        if (err) console.error('Failed to delete old profile pic:', err.message);
+      });
+    }
     res.json(await User.findById(user._id).select('-password'));
   } catch (err) { res.status(500).json({ message: err.message }); }
 });

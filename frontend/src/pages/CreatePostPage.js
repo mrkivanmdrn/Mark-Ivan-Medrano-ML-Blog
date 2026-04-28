@@ -2,18 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api/axios";
-
-const TAGS = [
-  "General",
-  "Strategy",
-  "Hero Guide",
-  "Tier List",
-  "Beginner Guide",
-  "Advanced",
-  "Opinion",
-  "Tournament",
-  "Community",
-];
+import { POST_TAGS } from "../constants/tags";
 
 function CreatePostPage() {
   const [form, setForm] = useState({ title: "", body: "", tag: "General" });
@@ -26,7 +15,9 @@ function CreatePostPage() {
   const handleFileChange = (e) => {
     const f = e.target.files[0];
     setImage(f);
+    if (preview) URL.revokeObjectURL(preview);
     if (f) setPreview(URL.createObjectURL(f));
+    else setPreview(null);
   };
 
   const validate = () => {
@@ -39,6 +30,12 @@ function CreatePostPage() {
       e.body = "Post must be at least 20 characters.";
     return e;
   };
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,7 +98,7 @@ function CreatePostPage() {
               value={form.tag}
               onChange={(e) => setForm({ ...form, tag: e.target.value })}
             >
-              {TAGS.map((t) => (
+              {POST_TAGS.map((t) => (
                 <option key={t} value={t}>
                   {t}
                 </option>

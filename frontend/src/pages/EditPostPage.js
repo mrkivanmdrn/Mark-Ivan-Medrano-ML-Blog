@@ -3,19 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import API from "../api/axios";
 import { useAuth } from "../context/AuthContext";
-
-const TAGS = [
-  "General",
-  "Strategy",
-  "Hero Guide",
-  "Tier List",
-  "Beginner Guide",
-  "Advanced",
-  "Opinion",
-  "Tournament",
-  "Community",
-];
-const API_URL = "http://localhost:5000";
+import { POST_TAGS } from "../constants/tags";
 
 function EditPostPage() {
   const { id } = useParams();
@@ -46,10 +34,18 @@ function EditPostPage() {
       .finally(() => setLoading(false));
   }, [id, user, navigate]);
 
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
+
   const handleFileChange = (e) => {
     const f = e.target.files[0];
     setImage(f);
+    if (preview) URL.revokeObjectURL(preview);
     if (f) setPreview(URL.createObjectURL(f));
+    else setPreview(null);
   };
 
   const validate = () => {
@@ -124,7 +120,7 @@ function EditPostPage() {
               value={form.tag}
               onChange={(e) => setForm({ ...form, tag: e.target.value })}
             >
-              {TAGS.map((t) => (
+              {POST_TAGS.map((t) => (
                 <option key={t} value={t}>
                   {t}
                 </option>
@@ -160,16 +156,17 @@ function EditPostPage() {
                 >
                   Current image:
                 </p>
-                <img
-                  src={`${API_URL}/uploads/${existing}`}
-                  alt="Current"
-                  style={{
-                    maxHeight: 180,
-                    borderRadius: 8,
-                    objectFit: "cover",
-                    width: "100%",
-                  }}
-                />
+                 <img
+                   src={`${process.env.REACT_APP_BACKEND_URL}/uploads/${existing}`}
+                   alt="Current post image"
+                   style={{
+                     maxHeight: 180,
+                     borderRadius: 8,
+                     objectFit: "cover",
+                     width: "100%",
+                   }}
+                   onError={(e) => { e.target.style.display = 'none'; }}
+                 />
               </div>
             )}
             <input

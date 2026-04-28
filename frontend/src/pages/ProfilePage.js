@@ -3,8 +3,6 @@ import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import API from "../api/axios";
 
-const API_URL = "http://localhost:5000";
-
 function ProfilePage() {
   const { user, setUser } = useAuth();
 
@@ -28,7 +26,9 @@ function ProfilePage() {
   const handleFileChange = (e) => {
     const f = e.target.files[0];
     setFile(f);
+    if (preview) URL.revokeObjectURL(preview);
     if (f) setPreview(URL.createObjectURL(f));
+    else setPreview(null);
   };
 
   const handleSaveProfile = async () => {
@@ -59,8 +59,8 @@ function ProfilePage() {
     setPwError("");
     if (!pwForm.currentPassword || !pwForm.newPassword)
       return setPwError("All password fields are required.");
-    if (pwForm.newPassword.length < 6)
-      return setPwError("New password must be at least 6 characters.");
+    if (pwForm.newPassword.length < 8)
+      return setPwError("New password must be at least 8 characters.");
     if (pwForm.newPassword !== pwForm.confirm)
       return setPwError("New passwords do not match.");
     try {
@@ -77,7 +77,13 @@ function ProfilePage() {
 
   const avatarSrc =
     preview ||
-    (user?.profilePic ? `${API_URL}/uploads/${user.profilePic}` : null);
+    (user?.profilePic ? `${process.env.REACT_APP_BACKEND_URL}/uploads/${user.profilePic}` : null);
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
 
   return (
     <main className="main-content">
@@ -85,7 +91,7 @@ function ProfilePage() {
       <section className="content-section" style={{ textAlign: "center" }}>
         <div className="profile-avatar-wrap">
           {avatarSrc ? (
-            <img src={avatarSrc} alt="Profile" className="profile-avatar-lg" />
+            <img src={avatarSrc} alt={user?.name ? `Profile picture of ${user.name}` : 'Profile avatar'} className="profile-avatar-lg" onError={(e) => { e.target.style.display = 'none'; }} />
           ) : (
             <div className="profile-avatar-placeholder">
               {user?.name?.charAt(0).toUpperCase()}
